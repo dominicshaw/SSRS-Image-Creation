@@ -13,11 +13,12 @@ namespace ConsoleApplication5
 
             try
             {
-                var target = new Bitmap(croppedWidth, croppedHeight);
+                var target = new Bitmap(croppedWidth - 2, croppedHeight - 2);
+
                 using (var g = Graphics.FromImage(target))
                 {
                     g.DrawImage(bmp,
-                        new RectangleF(0, 0, croppedWidth, croppedHeight),
+                        new RectangleF(-1, -1, croppedWidth - 1, croppedHeight - 1),
                         new RectangleF(leftmost, topmost, croppedWidth, croppedHeight),
                         GraphicsUnit.Pixel);
                 }
