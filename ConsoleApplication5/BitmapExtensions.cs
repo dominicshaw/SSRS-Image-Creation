@@ -1,25 +1,37 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace ConsoleApplication5
 {
-    public static class ImageExtensions
+    public static class BitmapExtensions
     {
-        public static string CropAndSaveAsPng(this string imageLocation)
+        public static Bitmap Crop(this Bitmap bmp)
         {
-            var fi = new FileInfo(imageLocation);
+            int topmost, bottommost, leftmost, rightmost, croppedWidth, croppedHeight;
 
-            var newLocation = fi.FullName.Substring(0, fi.FullName.Length - fi.Extension.Length) + ".png";
+            GetMargins(bmp, out topmost, out bottommost, out leftmost, out rightmost, out croppedWidth, out croppedHeight);
 
-            var replacement = Crop(new Bitmap(Image.FromFile(imageLocation)));
-            replacement.Save(newLocation, ImageFormat.Png);
-
-            return newLocation;
+            try
+            {
+                var target = new Bitmap(croppedWidth, croppedHeight);
+                using (var g = Graphics.FromImage(target))
+                {
+                    g.DrawImage(bmp,
+                        new RectangleF(0, 0, croppedWidth, croppedHeight),
+                        new RectangleF(leftmost, topmost, croppedWidth, croppedHeight),
+                        GraphicsUnit.Pixel);
+                }
+                return target;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Values are topmost={0} btm={1} left={2} right={3} croppedWidth={4} croppedHeight={5}", topmost, bottommost, leftmost, rightmost, croppedWidth, croppedHeight),
+                    ex);
+            }
         }
 
-        private static Bitmap Crop(Bitmap bmp)
+        private static void GetMargins(Bitmap bmp, out int topmost, out int bottommost, out int leftmost, out int rightmost, out int croppedWidth, out int croppedHeight)
         {
             var w = bmp.Width;
             var h = bmp.Height;
@@ -40,7 +52,7 @@ namespace ConsoleApplication5
                 return true;
             };
 
-            var topmost = 0;
+            topmost = 0;
             for (var row = 0; row < h; ++row)
             {
                 if (allWhiteRow(row))
@@ -48,7 +60,7 @@ namespace ConsoleApplication5
                 else break;
             }
 
-            var bottommost = 0;
+            bottommost = 0;
             for (var row = h - 1; row >= 0; --row)
             {
                 if (allWhiteRow(row))
@@ -56,7 +68,8 @@ namespace ConsoleApplication5
                 else break;
             }
 
-            int leftmost = 0, rightmost = 0;
+            leftmost = 0;
+            rightmost = 0;
             for (var col = 0; col < w; ++col)
             {
                 if (allWhiteColumn(col))
@@ -76,8 +89,8 @@ namespace ConsoleApplication5
             if (rightmost == 0) rightmost = w; // As reached left
             if (bottommost == 0) bottommost = h; // As reached top.
 
-            var croppedWidth = rightmost - leftmost;
-            var croppedHeight = bottommost - topmost;
+            croppedWidth = rightmost - leftmost;
+            croppedHeight = bottommost - topmost;
 
             if (croppedWidth == 0) // No border on left or right
             {
@@ -89,25 +102,6 @@ namespace ConsoleApplication5
             {
                 topmost = 0;
                 croppedHeight = h;
-            }
-
-            try
-            {
-                var target = new Bitmap(croppedWidth, croppedHeight);
-                using (var g = Graphics.FromImage(target))
-                {
-                    g.DrawImage(bmp,
-                        new RectangleF(0, 0, croppedWidth, croppedHeight),
-                        new RectangleF(leftmost, topmost, croppedWidth, croppedHeight),
-                        GraphicsUnit.Pixel);
-                }
-                return target;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    string.Format("Values are topmost={0} btm={1} left={2} right={3} croppedWidth={4} croppedHeight={5}", topmost, bottommost, leftmost, rightmost, croppedWidth, croppedHeight),
-                    ex);
             }
         }
     }

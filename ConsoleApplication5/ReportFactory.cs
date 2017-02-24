@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using Microsoft.Reporting.WinForms;
 
@@ -47,17 +49,32 @@ namespace ConsoleApplication5
                     saveAs = Path.Combine(TempPath, string.Format("{0}.{1}.bmp", nm, idx));
                 }
 
-                var stream = new FileStream(saveAs, FileMode.Create, FileAccess.Write);
-                stream.Write(renderedBytes, 0, renderedBytes.Length);
-                stream.Close();
-                stream.Dispose();
+                using (var stream = new FileStream(saveAs, FileMode.Create, FileAccess.Write))
+                {
+                    stream.Write(renderedBytes, 0, renderedBytes.Length);
+                    stream.Close();
+                }
 
-                saveAs = saveAs.CropAndSaveAsPng(); // normally could just show it but if we want to remove all the white space we can do this
+                saveAs = CropAndSaveAsPng(saveAs); // normally could just show it but if we want to remove all the white space we can do this
 
                 Process.Start(saveAs);
 
                 return saveAs;
             }
+        }
+
+        private static string CropAndSaveAsPng(string saveAs)
+        {
+            var fi = new FileInfo(saveAs);
+
+            var newLocation = fi.FullName.Substring(0, fi.FullName.Length - fi.Extension.Length) + ".png";
+
+            var bmp = new Bitmap(Image.FromFile(fi.FullName));
+
+            var replacement = bmp.Crop();
+            replacement.Save(newLocation, ImageFormat.Png);
+
+            return newLocation;
         }
 
         private static string TempPath
