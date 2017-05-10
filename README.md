@@ -32,4 +32,4 @@ This very simple console app takes a class defined:
     
 .. and turns it into an image
 
-![ScreenShot](https://raw.github.com/dominicshaw/SSRS-Image-Creation/master/ConsoleApplication5/Test Report Image.png)
+![ScreenShot](https://raw.github.com/dominicshaw/SSRS-Image-Creation/master/ConsoleApplication5/Test%20Report%20Image.png)
