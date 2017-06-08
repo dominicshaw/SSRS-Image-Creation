@@ -11,12 +11,6 @@ namespace ConsoleApplication5
     {
         private static ReportListViewModel _model;
 
-        private static string _mimeType;
-        private static string _encoding;
-        private static string _fileNameExtension;
-        private static Warning[] _warnings;
-        private static string[] _streams;
-
         public static string RunReport(ReportListViewModel model)
         {
             _model = model;
@@ -29,19 +23,19 @@ namespace ConsoleApplication5
                 lr.SubreportProcessing += Lr_SubreportProcessing;
 
                 lr.DataSources.Add(new ReportDataSource("DataSource", _model));
-
+                
                 var renderedBytes = lr.Render
                 (
                     "Image",
                     "<DeviceInfo><OutputFormat>BMP</OutputFormat></DeviceInfo>",
-                    out _mimeType,
-                    out _encoding,
-                    out _fileNameExtension,
-                    out _streams,
-                    out _warnings
+                    out string _,
+                    out string _,
+                    out string _,
+                    out string[] _,
+                    out Warning[] _
                 );
 
-                var nm = "Test Report Image";
+                const string nm = "Test Report Image";
 
                 var saveAs = Path.Combine(TempPath, nm + ".bmp");
 
