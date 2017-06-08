@@ -2,13 +2,14 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using Microsoft.Reporting.WinForms;
 
 namespace ConsoleApplication5
 {
     public static class ReportFactory
     {
-        private static object _model;
+        private static ReportListViewModel _model;
 
         private static string _mimeType;
         private static string _encoding;
@@ -24,6 +25,8 @@ namespace ConsoleApplication5
             {
                 lr.ReportEmbeddedResource = "ConsoleApplication5.Reports.TestReport.rdlc";
                 lr.EnableExternalImages = true;
+
+                lr.SubreportProcessing += Lr_SubreportProcessing;
 
                 lr.DataSources.Add(new ReportDataSource("DataSource", _model));
 
@@ -61,6 +64,12 @@ namespace ConsoleApplication5
 
                 return saveAs;
             }
+        }
+
+        private static void Lr_SubreportProcessing(object sender, SubreportProcessingEventArgs e)
+        {
+            var userId = int.Parse(e.Parameters[0].Values[0]);
+            e.DataSources.Add(new ReportDataSource("SubDataSet", _model.First(x => x.UserID == userId).Items));
         }
 
         private static string CropAndSaveAsPng(string saveAs)

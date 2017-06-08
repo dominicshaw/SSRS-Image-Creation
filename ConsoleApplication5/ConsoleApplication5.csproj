@@ -77,6 +77,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\ReportListViewModel.datasource" />
+    <None Include="Properties\DataSources\SubReportViewModel.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\Microsoft.SqlServer.Types.11.0.2\nativeBinaries\x64\msvcr100.dll">
@@ -102,6 +103,7 @@
     <EmbeddedResource Include="Reports\TestReport.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TestSubReport.rdlc" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
