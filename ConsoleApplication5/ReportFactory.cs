@@ -20,7 +20,7 @@ namespace ConsoleApplication5
                 lr.ReportEmbeddedResource = "ConsoleApplication5.Reports.TestReport.rdlc";
                 lr.EnableExternalImages = true;
 
-                lr.SubreportProcessing += Lr_SubreportProcessing;
+                lr.SubreportProcessing += lr_SubreportProcessing;
 
                 lr.DataSources.Add(new ReportDataSource("DataSource", _model));
                 
@@ -60,7 +60,7 @@ namespace ConsoleApplication5
             }
         }
 
-        private static void Lr_SubreportProcessing(object sender, SubreportProcessingEventArgs e)
+        private static void lr_SubreportProcessing(object sender, SubreportProcessingEventArgs e)
         {
             var userId = int.Parse(e.Parameters[0].Values[0]);
             e.DataSources.Add(new ReportDataSource("SubDataSet", _model.First(x => x.UserID == userId).Items));

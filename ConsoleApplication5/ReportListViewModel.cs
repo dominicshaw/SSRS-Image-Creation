@@ -10,7 +10,6 @@ namespace ConsoleApplication5
             {
                 UserID = 1,
                 Name = "User 1",
-                Score = 1,
                 Items =
                 {
                     new SubReportViewModel() { UserID = 1, SubName = "Detail 1", SubScore = 10 },
@@ -21,7 +20,6 @@ namespace ConsoleApplication5
             {
                 UserID = 2,
                 Name = "User 2",
-                Score = 2,
                 Items =
                 {
                     new SubReportViewModel() { UserID = 2, SubName = "Detail 3", SubScore = 30 },

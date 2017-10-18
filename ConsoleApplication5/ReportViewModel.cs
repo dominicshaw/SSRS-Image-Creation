@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleApplication5
 {
@@ -13,8 +14,8 @@ namespace ConsoleApplication5
     {
         public int UserID { get; set; }
         public string Name { get; set; }
-        public int Score { get; set; }
+        public int Score { get { return Items.Sum(x => x.SubScore); } }
 
-        public List<SubReportViewModel> Items { get; set; } = new List<SubReportViewModel>();
+        public List<SubReportViewModel> Items { get; } = new List<SubReportViewModel>();
     }
 }
