@@ -3,12 +3,15 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using log4net;
 using Microsoft.Reporting.WinForms;
 
 namespace ConsoleApplication5
 {
     public static class ReportFactory
     {
+        private static readonly ILog _log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static ReportListViewModel _model;
 
         public static string RunReport(ReportListViewModel model)
@@ -32,31 +35,35 @@ namespace ConsoleApplication5
                     out string _,
                     out string _,
                     out string[] _,
-                    out Warning[] _
+                    out var warnings
                 );
+
+                foreach (var w in warnings)
+                    _log.Warn($"{w.Code}: {w.Message}");
 
                 const string nm = "Test Report Image";
 
-                var saveAs = Path.Combine(TempPath, nm + ".bmp");
+                var path = Path.Combine(TempPath, nm + ".bmp");
 
                 var idx = 0;
-                while (File.Exists(saveAs))
+                while (File.Exists(path))
                 {
                     idx++;
-                    saveAs = Path.Combine(TempPath, string.Format("{0}.{1}.bmp", nm, idx));
+                    path = Path.Combine(TempPath, string.Format("{0}.{1}.bmp", nm, idx));
                 }
 
-                using (var stream = new FileStream(saveAs, FileMode.Create, FileAccess.Write))
+                using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
                     stream.Write(renderedBytes, 0, renderedBytes.Length);
                     stream.Close();
                 }
 
-                saveAs = CropAndSaveAsPng(saveAs); // normally could just show it but if we want to remove all the white space we can do this
+                path = CropAndSaveAsPng(path); // normally could just show it but if we want to remove all the white space we can do this
 
-                Process.Start(saveAs);
+                Process.Start(path);
+                _log.Info("Generated to " + path);
 
-                return saveAs;
+                return path;
             }
         }
 
