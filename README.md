@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/github/dominicshaw/ssrs-image-creation?branch=master&amp;svg=true)](https://ci.appveyor.com/project/dominicshaw/ssrs-image-creation/branch/master)
+
 # SSRS-Image-Creation
 Very quick demo of taking a simple class and representing as an image
 
